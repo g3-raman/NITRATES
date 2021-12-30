@@ -52,15 +52,9 @@ def cli():
     parser.add_argument('--qos', type=str,\
             help="Name of the qos to submit jobs to",\
             default=None)
-    parser.add_argument('--q', type=str,\
+    parser.add_argument('-q', type=str,\
             help="Name of the q to submit jobs to",\
-            default=None)
-    parser.add_argument('--N_infov_jobs', type=int,\
-            help="Number of infov jobs to submit",\
-            default=96)
-    parser.add_argument('--N_outfov_jobs', type=int,\
-            help="Number of outfov jobs to submit",\
-            default=24)
+	    default=None)
     parser.add_argument('--pcfname', type=str,\
             help="Name of the partial coding image",\
             default='pc_2.img')
@@ -108,7 +102,7 @@ def cli():
             default='/storage/home/gzr5209/work/BatML/submission_scripts/pyscript_template.pbs')
     parser.add_argument('--pbs_rhel7_fname', type=str,\
             help="Name of pbs script",\
-            default='/storage/home/gzr5209/work/BatML/submission_scripts/pyscript_template_rhel7.pbs')
+            default='/storage/home/gzr5209/work/BatML/submission_scripts/pyscript_template_rhel7_g3.pbs')
     parser.add_argument('--min_pc', type=float,\
             help="Min partical coding fraction to use",\
             default=0.1)
@@ -795,7 +789,7 @@ def get_ssh_client(server, retries=5):
 
 
 def sub_jobs(njobs, name, pyscript, pbs_fname, queue='open',\
-                workdir=None, qos=None, q=None, ssh=True, extra_args=None,\
+                workdir=None, qos=None, ssh=True, extra_args=None,\
                 ppn=1, rhel7=False):
 
     hostname = socket.gethostname()
@@ -818,57 +812,36 @@ def sub_jobs(njobs, name, pyscript, pbs_fname, queue='open',\
         client = get_ssh_client(server)
         # base_sub_cmd = 'qsub %s -A %s -N %s -v '\
         #             %(args.pbs_fname, args.queue, args.name)
-    if qos is not None:
-        if rhel7:
-            if q is None:
+        if qos is not None:
+            if rhel7:
                 base_sub_cmd = 'qsub %s -A %s -N %s -l nodes=1:ppn=%d -l qos=%s -l feature=rhel7 -v '\
                             %(pbs_fname, queue, name, ppn, qos)
             else:
-                base_sub_cmd = 'qsub %s -A %s -q %s -N %s -l nodes=1:ppn=%d -l qos=%s -l feature=rhel7 -v '\
-                            %(pbs_fname, queue, q, name, ppn, qos)
-
-        else:
-            if q is None:
                 base_sub_cmd = 'qsub %s -A %s -N %s -l nodes=1:ppn=%d -l qos=%s -v '\
                             %(pbs_fname, queue, name, ppn, qos)
-            else:
-                base_sub_cmd = 'qsub %s -A %s -q %s -N %s -l nodes=1:ppn=%d -l qos=%s -v '\
-                            %(pbs_fname, queue, q, name, ppn, qos)
-    else:
-        if rhel7:
-            if q is None:
+        else:
+            if rhel7:
                 base_sub_cmd = 'qsub %s -A %s -N %s -l nodes=1:ppn=%d -l feature=rhel7 -v '\
                             %(pbs_fname, queue, name, ppn)
             else:
-                base_sub_cmd = 'qsub %s -A %s -q %s -N %s -l nodes=1:ppn=%d -l feature=rhel7 -v '\
-                            %(pbs_fname, queue, q, name, ppn)
-
-        else:
-            if q is None:
                 base_sub_cmd = 'qsub %s -A %s -N %s -l nodes=1:ppn=%d -v '\
                             %(pbs_fname, queue, name, ppn)
+
+    else:
+        if qos is not None:
+            if rhel7:
+                base_sub_cmd = 'qsub %s -A %s -N %s -l nodes=1:ppn=%d -l qos=%s -l feature=rhel7 -v '\
+                            %(pbs_fname, queue, name, ppn, qos)
             else:
-                base_sub_cmd = 'qsub %s -A %s -q %s -N %s -l nodes=1:ppn=%d -v '\
-                            %(pbs_fname, queue, q, name, ppn)
-
-
-
-
-    # else:
-    #     if qos is not None:
-    #         if rhel7:
-    #             base_sub_cmd = 'qsub %s -A %s -N %s -l nodes=1:ppn=%d -l qos=%s -l feature=rhel7 -v '\
-    #                         %(pbs_fname, queue, name, ppn, qos)
-    #         else:
-    #             base_sub_cmd = 'qsub %s -A %s -N %s -l nodes=1:ppn=%d -l qos=%s -v '\
-    #                         %(pbs_fname, queue, name, ppn, qos)
-    #     else:
-    #         if rhel7:
-    #             base_sub_cmd = 'qsub %s -A %s -N %s -l nodes=1:ppn=%d -l feature=rhel7 -v '\
-    #                         %(pbs_fname, queue, name, ppn)
-    #         else:
-    #             base_sub_cmd = 'qsub %s -A %s -N %s -l nodes=1:ppn=%d -v '\
-    #                         %(pbs_fname, queue, name, ppn)
+                base_sub_cmd = 'qsub %s -A %s -N %s -l nodes=1:ppn=%d -l qos=%s -v '\
+                            %(pbs_fname, queue, name, ppn, qos)
+        else:
+            if rhel7:
+                base_sub_cmd = 'qsub %s -A %s -N %s -l nodes=1:ppn=%d -l feature=rhel7 -v '\
+                            %(pbs_fname, queue, name, ppn)
+            else:
+                base_sub_cmd = 'qsub %s -A %s -N %s -l nodes=1:ppn=%d -v '\
+                            %(pbs_fname, queue, name, ppn)
 
     if workdir is None:
         workdir = os.getcwd()
@@ -876,7 +849,6 @@ def sub_jobs(njobs, name, pyscript, pbs_fname, queue='open',\
         extra_args = ""
 
     cmd = ''
-    cmds = []
     jobids = []
 
     for i in xrange(njobs):
@@ -885,12 +857,6 @@ def sub_jobs(njobs, name, pyscript, pbs_fname, queue='open',\
         cmd_ = 'jobid=%d,workdir=%s,njobs=%d,pyscript=%s,extra_args="%s"' %(i,workdir,njobs,pyscript,extra_args)
         if ssh:
             cmd += base_sub_cmd + cmd_
-            # split up command if it's too long
-            # max packet size is 32768 bytes
-            if len(cmd) > 2e4:
-                cmds.append(cmd)
-                cmd = ''
-                continue
             if i < (njobs-1):
                 cmd += ' | '
             # cmd = base_sub_cmd + cmd_
@@ -921,30 +887,24 @@ def sub_jobs(njobs, name, pyscript, pbs_fname, queue='open',\
                 logging.error(cmd)
 
             time.sleep(0.1)
-
-    cmds.append(cmd)
-
     if ssh:
 
         # ssh_cmd = 'ssh aci-b.aci.ics.psu.edu "'
         # cmd = ssh_cmd + cmd + '"'
-        for cmd in cmds:
-            logging.info("Full cmd to run:")
-            logging.info(cmd)
-            try:
-                jobids = execute_ssh_cmd(client, cmd, server)
-                logging.debug("jobids: ")
-                logging.debug(jobids)
-                # os.system(cmd)
-                # subprocess.check_call(cmd, shell=True)
-                # cmd_list = ['ssh', 'aci-b.aci.ics.psu.edu', '"'+cmd+'"']
-                # cmd_list = shlex.split(cmd)
-                # logging.info(cmd_list)
-                # subprocess.check_call(cmd_list)
-            except Exception as E:
-                logging.error(E)
-                logging.error("Messed up with ")
-                logging.error(cmd)
+        logging.info("Full cmd to run:")
+        logging.info(cmd)
+        try:
+            jobids = execute_ssh_cmd(client, cmd, server)
+            # os.system(cmd)
+            # subprocess.check_call(cmd, shell=True)
+            # cmd_list = ['ssh', 'aci-b.aci.ics.psu.edu', '"'+cmd+'"']
+            # cmd_list = shlex.split(cmd)
+            # logging.info(cmd_list)
+            # subprocess.check_call(cmd_list)
+        except Exception as E:
+            logging.error(E)
+            logging.error("Messed up with ")
+            logging.error(cmd)
     if ssh:
         client.close()
     return jobids
@@ -1148,21 +1108,21 @@ def main(args):
             if args.rhel7:
                 sub_jobs(1, 'BKG_'+args.GWname, args.BKGpyscript,\
                         args.pbs_rhel7_fname, queue=args.queue, ppn=4,\
-                        extra_args=extra_args, qos=None, rhel7=args.rhel7, q=args.q)
+                        extra_args=extra_args, qos=None, rhel7=args.rhel7)
             else:
                 sub_jobs(1, 'BKG_'+args.GWname, args.BKGpyscript,\
                         args.pbs_fname, queue=args.queue, ppn=4,\
-                        extra_args=extra_args, qos=None, rhel7=args.rhel7, q=args.q)
+                        extra_args=extra_args, qos=None, rhel7=args.rhel7)
         else:
             if args.rhel7:
                 sub_jobs(1, 'BKG_'+args.GWname, args.BKGpyscript,\
                         args.pbs_rhel7_fname, queue=args.queue,\
-                        ppn=4, qos=None, rhel7=args.rhel7, q=args.q)
+                        ppn=4, qos=None, rhel7=args.rhel7)
             else:
                 sub_jobs(1, 'BKG_'+args.GWname, args.BKGpyscript,\
                         args.pbs_fname,\
-                        queue=args.queue,\
-                        ppn=4, qos=None, rhel7=args.rhel7, q=args.q)
+                        queue='open',#args.queue,\
+                        ppn=4, qos=None, rhel7=args.rhel7)
         logging.info("Job submitted")
         # except Exception as E:
         #     logging.warn(E)
@@ -1201,11 +1161,11 @@ def main(args):
         if args.rhel7:
             sub_jobs(Nratejobs, 'RATES_'+args.GWname, args.RATEpyscript,\
                         args.pbs_rhel7_fname, queue=args.queue, qos=args.qos,\
-                        extra_args=extra_args, rhel7=args.rhel7, q=args.q)
+                        extra_args=extra_args, rhel7=args.rhel7)
         else:
             sub_jobs(Nratejobs, 'RATES_'+args.GWname, args.RATEpyscript,\
                         args.pbs_fname, queue=args.queue, qos=args.qos,\
-                        extra_args=extra_args, rhel7=args.rhel7, q=args.q)
+                        extra_args=extra_args, rhel7=args.rhel7)
         logging.info("Jobs submitted")
         # except Exception as E:
         #     logging.warn(E)
@@ -1268,7 +1228,6 @@ def main(args):
     else:
         seed_in_tab = mk_in_seed_tab(rate_res, TS_min=args.rateTScut)
     Nmax_jobs = 96
-    Nmax_jobs = args.N_infov_jobs
     if args.queue == 'open':
         Nmax_jobs = 64
     seed_in_tab = assign_in_seeds2jobs(seed_in_tab, Nmax_jobs=Nmax_jobs)
@@ -1289,7 +1248,6 @@ def main(args):
 
     attq = attfile['QPARAM'][np.argmin(np.abs(attfile['TIME'] - trigtime))]
     Nmax_jobs = 24
-    Nmax_jobs = args.N_outfov_jobs
     if args.queue == 'open':
         Nmax_jobs = 16
     seed_out_tab = mk_out_seed_tab(seed_in_tab, good_hp_inds, attq, Nmax_jobs=Nmax_jobs)
@@ -1356,19 +1314,17 @@ def main(args):
         if args.rhel7:
             sub_jobs(Njobs_in, 'LLHin_'+args.GWname, args.LLHINpyscript,\
                         args.pbs_rhel7_fname, queue=args.queue, qos=args.qos,\
-                        extra_args=extra_args, rhel7=args.rhel7, q=args.q)
+                        extra_args=extra_args, rhel7=args.rhel7)
             logging.info("Submitting %d out of FoV Jobs now"%(Njobs_out))
             sub_jobs(Njobs_out, 'LLHo_'+args.GWname, args.LLHOUTpyscript,\
-                        args.pbs_rhel7_fname, queue=args.queue, qos=args.qos,\
-                        rhel7=args.rhel7, q=args.q)
+                        args.pbs_rhel7_fname, queue=args.queue, qos=args.qos, rhel7=args.rhel7)
         else:
             sub_jobs(Njobs_in, 'LLHin_'+args.GWname, args.LLHINpyscript,\
                         args.pbs_fname, queue=args.queue, qos=args.qos,\
-                        extra_args=extra_args, rhel7=args.rhel7, q=args.q)
+                        extra_args=extra_args, rhel7=args.rhel7)
             logging.info("Submitting %d out of FoV Jobs now"%(Njobs_out))
             sub_jobs(Njobs_out, 'LLHo_'+args.GWname, args.LLHOUTpyscript,\
-                        args.pbs_fname, queue=args.queue, qos=args.qos,\
-                        rhel7=args.rhel7, q=args.q)
+                        args.pbs_fname, queue=args.queue, qos=args.qos, rhel7=args.rhel7)
         logging.info("Jobs submitted, now going to monitor progress")
 
 

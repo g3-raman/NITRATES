@@ -9,6 +9,9 @@ import sys
 import subprocess
 import voeventparse as vp
 from datetime import datetime
+import parse
+
+
 
 from helper_funcs import send_error_email, send_email
 from hp_funcs import err_circle2prob_map
