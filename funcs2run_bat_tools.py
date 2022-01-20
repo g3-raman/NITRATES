@@ -1,7 +1,8 @@
 import os
 import subprocess
 import sys
-sys.path.append('/storage/work/jjd330/local/bat_data/BatML/HeasoftTools')
+#sys.path.append('/storage/work/jjd330/local/bat_data/BatML/HeasoftTools')
+sys.path.append('/storage/home/gzr5209/work/BatML_code_work/NITRATES/HeasoftTools')
 from gen_tools import run_ftool
 from bat_tool_funcs import ev2dpi, mk_pc_img, mk_sky_img, run_batcelldetect
 import time
