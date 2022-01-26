@@ -35,6 +35,12 @@ def cli():
     parser.add_argument('--Nrate_jobs', type=int,\
             help="Total number of jobs",
             default=16)
+    parser.add_argument('--N_infov_jobs', type=int,\
+            help="Number of infov jobs to submit",\
+            default=96)
+    parser.add_argument('--N_outfov_jobs', type=int,\
+            help="Number of outfov jobs to submit",\
+	    default=24)
     parser.add_argument('--TSscan', type=float,\
             help="Min TS needed to do a full FoV scan",
             default=6.25)
@@ -52,28 +58,28 @@ def cli():
             default='')
     parser.add_argument('--queue', type=str,\
             help="Name of the queue to submit jobs to",\
-            default='jak51_b_g_vc_default')
+            default='open')
     parser.add_argument('--qos', type=str,\
             help="Name of the qos to submit jobs to",\
             default=None)
     parser.add_argument('--q', type=str,\
             help="Name of the q to submit jobs to",\
-	    default='hprc')
+	    default='open')
     parser.add_argument('--pcfname', type=str,\
             help="Name of the partial coding image",\
             default='pc_2.img')
     parser.add_argument('--BKGpyscript', type=str,\
             help="Name of python script for Bkg Estimation",\
-            default='do_bkg_estimation_wPSs_mp2.py')
+            default='/storage/home/gzr5209/work/BatML_code_work/NITRATES/do_bkg_estimation_wPSs_mp2.py')
     parser.add_argument('--RATEpyscript', type=str,\
             help="Name of python script for Rates analysis",\
-            default='do_rates_mle_InOutFoV2.py')
+            default='/storage/home/gzr5209/work/BatML_code_work/NITRATES/do_rates_mle_InOutFoV2.py')
     parser.add_argument('--LLHINpyscript', type=str,\
             help="Name of python script for LLH analysis",\
-            default='do_llh_inFoV4realtime2.py')
+            default='/storage/home/gzr5209/work/BatML_code_work/NITRATES/do_llh_inFoV4realtime2.py')
     parser.add_argument('--LLHOUTpyscript', type=str,\
             help="Name of python script for LLH analysis",\
-            default='do_llh_outFoV4realtime2.py')
+            default='/storage/home/gzr5209/work/BatML_code_work/NITRATES/do_llh_outFoV4realtime2.py')
     # parser.add_argument('--SCANpyscript', type=str,\
     #         help="Name of python script for FoV scan",\
     #         default='do_llh_scan_uncoded.py')
@@ -792,8 +798,8 @@ def get_ssh_client(server, retries=5):
 
 
 
-def sub_jobs(njobs, name, pyscript, pbs_fname, queue='jak51_b_g_vc_default',\
-                workdir=None, qos=None, q='hprc', ssh=True, extra_args=None,\
+def sub_jobs(njobs, name, pyscript, pbs_fname, queue='open',\
+                workdir=None, qos=None, q=None, ssh=True, extra_args=None,\
                 ppn=1, rhel7=False):
 
     hostname = socket.gethostname()
@@ -818,15 +824,15 @@ def sub_jobs(njobs, name, pyscript, pbs_fname, queue='jak51_b_g_vc_default',\
         #             %(args.pbs_fname, args.queue, args.name)
         if qos is not None:
             if rhel7:
-                base_sub_cmd = 'qsub %s -A %s -q %s -N %s -l nodes=1:ppn=%d -l qos=%s -l feature=rhel7 -v '\
-                            %(pbs_fname, queue, q, name, ppn, qos)
+                base_sub_cmd = 'qsub %s -A %s -N %s -l nodes=1:ppn=%d -l qos=%s -l feature=rhel7 -v '\
+                            %(pbs_fname, queue, name, ppn, qos)
             else:
                 base_sub_cmd = 'qsub %s -A %s -q %s -N %s -l nodes=1:ppn=%d -l qos=%s -v '\
                             %(pbs_fname, queue, q, name, ppn, qos)
         else:
             if rhel7:
-                base_sub_cmd = 'qsub %s -A %s -q %s -N %s -l nodes=1:ppn=%d -l feature=rhel7 -v '\
-                            %(pbs_fname, queue, q, name, ppn)
+                base_sub_cmd = 'qsub %s -A %s -N %s -l nodes=1:ppn=%d -l feature=rhel7 -v '\
+                            %(pbs_fname, queue, name, ppn)
             else:
                 base_sub_cmd = 'qsub %s -A %s -q %s -N %s -l nodes=1:ppn=%d -v '\
                             %(pbs_fname, queue, q, name, ppn)
@@ -834,15 +840,15 @@ def sub_jobs(njobs, name, pyscript, pbs_fname, queue='jak51_b_g_vc_default',\
     else:
         if qos is not None:
             if rhel7:
-                base_sub_cmd = 'qsub %s -A %s -q %s -N %s -l nodes=1:ppn=%d -l qos=%s -l feature=rhel7 -v '\
-                            %(pbs_fname, queue, q, name, ppn, qos)
+                base_sub_cmd = 'qsub %s -A %s -N %s -l nodes=1:ppn=%d -l qos=%s -l feature=rhel7 -v '\
+                            %(pbs_fname, queue, name, ppn, qos)
             else:
                 base_sub_cmd = 'qsub %s -A %s -q %s-N %s -l nodes=1:ppn=%d -l qos=%s -v '\
                             %(pbs_fname, queue, q, name, ppn, qos)
         else:
             if rhel7:
-                base_sub_cmd = 'qsub %s -A %s -q %s -N %s -l nodes=1:ppn=%d -l feature=rhel7 -v '\
-                            %(pbs_fname, queue, q, name, ppn)
+                base_sub_cmd = 'qsub %s -A %s -N %s -l nodes=1:ppn=%d -l feature=rhel7 -v '\
+                            %(pbs_fname, queue, name, ppn)
             else:
                 base_sub_cmd = 'qsub %s -A %s -q %s -N %s -l nodes=1:ppn=%d -v '\
                             %(pbs_fname, queue,q,  name, ppn)
@@ -984,7 +990,9 @@ def main(args):
 
     logging.info("Wrote pid: %d" %(os.getpid()))
 
-    to = ['gzr5209@psu.edu']
+    #to = ['delauj2@gmail.com', 'aaron.tohu@gmail.com',
+     #       'g3raman@psu.edu', 'jak51@psu.edu']
+    to = ['graman.sudha@gmail.com']
     subject = 'BATML ' + args.GWname
     body = "Got data and starting analysis"
     try:
@@ -1111,21 +1119,21 @@ def main(args):
             if args.rhel7:
                 sub_jobs(1, 'BKG_'+args.GWname, args.BKGpyscript,\
                         args.pbs_rhel7_fname, queue=args.queue, ppn=1,\
-                        extra_args=extra_args, qos=None, rhel7=args.rhel7)
+                        extra_args=extra_args, qos=None, rhel7=args.rhel7,q=args.q)
             else:
                 sub_jobs(1, 'BKG_'+args.GWname, args.BKGpyscript,\
                         args.pbs_fname, queue=args.queue, ppn=1,\
-                        extra_args=extra_args, qos=None, rhel7=args.rhel7)
+                        extra_args=extra_args, qos=None, rhel7=args.rhel7,q=args.q)
         else:
             if args.rhel7:
                 sub_jobs(1, 'BKG_'+args.GWname, args.BKGpyscript,\
                         args.pbs_rhel7_fname, queue=args.queue,\
-                        ppn=1, qos=None, rhel7=args.rhel7)
+                        ppn=1, qos=None, rhel7=args.rhel7,q=args.q)
             else:
                 sub_jobs(1, 'BKG_'+args.GWname, args.BKGpyscript,\
                         args.pbs_fname,\
                         queue='open',#args.queue,\
-                        ppn=1, qos=None, rhel7=args.rhel7)
+                        ppn=1, qos=None, rhel7=args.rhel7,q=args.q)
         logging.info("Job submitted")
         # except Exception as E:
         #     logging.warn(E)
@@ -1164,11 +1172,11 @@ def main(args):
         if args.rhel7:
             sub_jobs(Nratejobs, 'RATES_'+args.GWname, args.RATEpyscript,\
                         args.pbs_rhel7_fname, queue=args.queue, qos=args.qos,\
-                        extra_args=extra_args, rhel7=args.rhel7)
+                        extra_args=extra_args, rhel7=args.rhel7,q=args.q)
         else:
             sub_jobs(Nratejobs, 'RATES_'+args.GWname, args.RATEpyscript,\
                         args.pbs_fname, queue=args.queue, qos=args.qos,\
-                        extra_args=extra_args, rhel7=args.rhel7)
+                        extra_args=extra_args, rhel7=args.rhel7,q=args.q)
         logging.info("Jobs submitted")
         # except Exception as E:
         #     logging.warn(E)
@@ -1317,17 +1325,17 @@ def main(args):
         if args.rhel7:
             sub_jobs(Njobs_in, 'LLHin_'+args.GWname, args.LLHINpyscript,\
                         args.pbs_rhel7_fname, queue=args.queue, qos=args.qos,\
-                        extra_args=extra_args, rhel7=args.rhel7)
+                        extra_args=extra_args, rhel7=args.rhel7,q=args.q)
             logging.info("Submitting %d out of FoV Jobs now"%(Njobs_out))
             sub_jobs(Njobs_out, 'LLHo_'+args.GWname, args.LLHOUTpyscript,\
-                        args.pbs_rhel7_fname, queue=args.queue, qos=args.qos, rhel7=args.rhel7)
+                        args.pbs_rhel7_fname, queue=args.queue, qos=args.qos, rhel7=args.rhel7,q=args.q)
         else:
             sub_jobs(Njobs_in, 'LLHin_'+args.GWname, args.LLHINpyscript,\
                         args.pbs_fname, queue=args.queue, qos=args.qos,\
-                        extra_args=extra_args, rhel7=args.rhel7)
+                        extra_args=extra_args, rhel7=args.rhel7,q=args.q)
             logging.info("Submitting %d out of FoV Jobs now"%(Njobs_out))
             sub_jobs(Njobs_out, 'LLHo_'+args.GWname, args.LLHOUTpyscript,\
-                        args.pbs_fname, queue=args.queue, qos=args.qos, rhel7=args.rhel7)
+                        args.pbs_fname, queue=args.queue, qos=args.qos, rhel7=args.rhel7,q=args.q)
         logging.info("Jobs submitted, now going to monitor progress")
 
 
@@ -1373,31 +1381,37 @@ def main(args):
                     if has_sky_map:
                         res_in_tab = get_merged_csv_df_wpos(res_in_fnames, attfile, perc_map)
                         res_peak_tab = get_merged_csv_df_wpos(res_peak_fnames, attfile, perc_map)
+			logging.info("Stage 1")
                     else:
                         res_in_tab = get_merged_csv_df_wpos(res_in_fnames, attfile)
                         res_peak_tab = get_merged_csv_df_wpos(res_peak_fnames, attfile)
+			logging.info("Stage 2")
                     logging.info("Got merged results with RA Decs")
                 except Exception as E:
                     logging.error(E)
                     try:
                         res_in_tab = get_merged_csv_df(res_in_fnames)
-                         res_peak_tab = get_merged_csv_df(res_peak_fnames)
+                        res_peak_tab = get_merged_csv_df(res_peak_fnames)
+			logging.info("Stage 3")
                         logging.info("Got merged in results without RA Decs")
                     except Exception as E:
                         logging.error(E)
                     try:
                         res_peak_tab = get_merged_csv_df(res_peak_fnames)
+			logging.info("Stage 4")
                         logging.info("Got merged peak results without RA Decs")
                     except Exception as E:
                         logging.error(E)
                 try:
                     res_in_tab['dt'] = res_in_tab['time'] - trigtime
                     res_peak_tab['dt'] = res_peak_tab['time'] - trigtime
+		    logging.info("Stage 5")
                 except Exception:
                     pass
                 try:
                     logging.info("Max in TS: %.3f" %(np.max(res_in_tab['TS'])))
                     logging.info("Max peak TS: %.3f" %(np.max(res_peak_tab['TS'])))
+		    logging.info("Stage 6")
                 except Exception:
                     pass
                 # try:
@@ -1419,6 +1433,7 @@ def main(args):
                     logging.info(body)
                     # send_email(subject, body, to)
                     send_email_wHTML(subject, body, to)
+		    logging.info("Stage 7")
                 except Exception as E:
                     logging.error(E)
                     logging.error("Trouble sending email")

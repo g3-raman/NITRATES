@@ -5,20 +5,21 @@ from email.MIMEBase import MIMEBase
 from email import Encoders
 
 
-pass_fname = 'pass.txt'
-try:
-    with open(pass_fname, 'r') as f:
-        pas = f.read().strip()
-except:
-    pas = ''
+#pass_fname = 'pass.txt'
+#try:
+#    with open(pass_fname, 'r') as f:
+#        pas = f.read().strip()
+#except:
+#    pas = ''
 
 def send_error_email(subject, body):
-    to = ['delauj2@gmail.com']
-    me = 'amon.psu@gmail.com'
+    to = ['gzr5209@psu.edu']
+    me = 'graman.sudha@gmail.com'
     msg = MIMEText(body)
     msg['Subject'] = subject
     msg['From'] = me
     msg['To'] = ", ".join(to)
+    pas = 'cheesec@ke1234'
     s = smtplib.SMTP('smtp.gmail.com:587')
     s.ehlo()
     s.starttls()
@@ -29,12 +30,13 @@ def send_error_email(subject, body):
     s.quit()
 
 def send_email(subject, body, to):
-    #to = ['delauj2@gmail.com']
-    me = 'amon.psu@gmail.com'
+    to = ['gzr5209@psu.edu']
+    me = 'graman.sudha@gmail.com'
     msg = MIMEText(body)
     msg['Subject'] = subject
     msg['From'] = me
     msg['To'] = ", ".join(to)
+    pas = 'cheesec@ke1234'
     s = smtplib.SMTP('smtp.gmail.com:587')
     s.ehlo()
     s.starttls()
@@ -45,14 +47,15 @@ def send_email(subject, body, to):
     s.quit()
 
 def send_email_wHTML(subject, body, to):
-    #to = ['delauj2@gmail.com']
-    me = 'amon.psu@gmail.com'
+    to = ['gzr5209@psu.edu']
+    me = 'graman.sudha@gmail.com'
     msg = MIMEMultipart('alternative')
     msg['Subject'] = subject
     msg['From'] = me
     msg['To'] = ", ".join(to)
     html_body = MIMEText(body, 'html')
     msg.attach(html_body)
+    pas = 'cheesec@ke1234'    
     s = smtplib.SMTP('smtp.gmail.com:587')
     s.ehlo()
     s.starttls()
@@ -65,7 +68,7 @@ def send_email_wHTML(subject, body, to):
 
 def send_email_attach(subject, body, to, fname):
 
-    me = 'amon.psu@gmail.com'
+    me = 'graman.sudha@gmail.com'
 
     msg = MIMEMultipart()
 
@@ -74,6 +77,7 @@ def send_email_attach(subject, body, to, fname):
     msg['To'] = ", ".join(to)
 
     msg.attach(MIMEText(body))
+    pas = 'cheesec@ke1234'
     s = smtplib.SMTP('smtp.gmail.com:587')
     s.ehlo()
     s.starttls()
