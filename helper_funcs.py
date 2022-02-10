@@ -30,6 +30,7 @@ def send_error_email(subject, body):
     s.quit()
 
 def send_email(subject, body, to):
+   # to = ['gzr5209@psu.edu','aaron.tohu@gmail.com','delauj2@gmail.com']
     to = ['gzr5209@psu.edu']
     me = 'graman.sudha@gmail.com'
     msg = MIMEText(body)
@@ -47,6 +48,7 @@ def send_email(subject, body, to):
     s.quit()
 
 def send_email_wHTML(subject, body, to):
+   # to = ['gzr5209@psu.edu','aaron.tohu@gmail.com','delauj2@gmail.com']
     to = ['gzr5209@psu.edu']
     me = 'graman.sudha@gmail.com'
     msg = MIMEMultipart('alternative')

@@ -5,7 +5,9 @@ ht_path=$batml_path'HeasoftTools/'
 sub_path=$batml_path'submission_scripts/'
 
 #workdir='/storage/home/gzr5209/work/bat-data/'
-workdir='/storage/home/gzr5209/work/realtime_workdir/results/'
+#workdir='/storage/home/gzr5209/work/realtime_workdir/result/'
+workdir='/gpfs/group/jak51/default/gzr5209/realtime_results/'
+
 ratespbs='/storage/home/gzr5209/work/BatML_code_work/NITRATES/submission_scripts/pyscript_template_rhel7_g3.pbs'
 
 drmdir='/storage/home/gzr5209/work/drms/'
@@ -126,6 +128,7 @@ if [ -f "filter_evdata.fits" ]; then
     # python $sub_path'submit_jobs.py' --Njobs $Nratejobs --workdir $workdir --name $gwname --pbs_fname $ratespbs > submit_jobs.log 2>&1 &
     # python $batml_path'do_manage.py' --Nrate_jobs $Nratejobs --GWname $gwname > manager.out 2>&1 &
     python $batml_path'do_full_rates.py' --min_tbin $mintbin > full_rates.out 2>&1 &
+ 
     python $batml_path'do_manage2_open.py' --GWname $gwname --rhel7 --do_bkg --do_rates --do_llh --queue open --N_infov_jobs 96 --N_outfov_jobs 24 > manager.out 2>&1 &
     #python $batml_path'do_manage2.py' --GWname $gwname --rhel7 --do_bkg --do_rates --do_llh > manager.out 2>&1 &
 fi

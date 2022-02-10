@@ -5,7 +5,8 @@ ht_path=$batml_path'HeasoftTools/'
 sub_path=$batml_path'submission_scripts/'
 
 #workdir='/storage/home/gzr5209/work/bat-data/'
-workdir='/storage/home/gzr5209/work/realtime_workdir/results/GW00059177002_open_NITRATES'
+#workdir='/storage/home/gzr5209/work/realtime_workdir/results/GW00059177002_open_NITRATES'
+workdir='/gpfs/group/jak51/default/gzr5209/GW_subthr_results/'
 ratespbs='/storage/home/gzr5209/work/BatML_code_work/NITRATES/submission_scripts/pyscript_template_rhel7_g3.pbs'
 
 drmdir='/storage/home/gzr5209/work/drms/'

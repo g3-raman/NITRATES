@@ -35,6 +35,12 @@ def cli():
     parser.add_argument('--Nrate_jobs', type=int,\
             help="Total number of jobs",
             default=16)
+    parser.add_argument('--N_infov_jobs', type=int,\
+            help="Number of infov jobs to submit",\
+            default=96)
+    parser.add_argument('--N_outfov_jobs', type=int,\
+            help="Number of outfov jobs to submit",\
+            default=24)
     parser.add_argument('--TSscan', type=float,\
             help="Min TS needed to do a full FoV scan",
             default=6.25)
@@ -64,16 +70,16 @@ def cli():
             default='pc_2.img')
     parser.add_argument('--BKGpyscript', type=str,\
             help="Name of python script for Bkg Estimation",\
-            default='do_bkg_estimation_wPSs_mp2.py')
+            default='/storage/home/gzr5209/work/BatML_code_work/NITRATES/do_bkg_estimation_wPSs_mp2.py')
     parser.add_argument('--RATEpyscript', type=str,\
             help="Name of python script for Rates analysis",\
-            default='do_rates_mle_InOutFoV2.py')
+            default='/storage/home/gzr5209/work/BatML_code_work/NITRATES/do_rates_mle_InOutFoV2.py')
     parser.add_argument('--LLHINpyscript', type=str,\
             help="Name of python script for LLH analysis",\
-            default='do_llh_inFoV4realtime2.py')
+            default='/storage/home/gzr5209/work/BatML_code_work/NITRATES/do_llh_inFoV4realtime2.py')
     parser.add_argument('--LLHOUTpyscript', type=str,\
             help="Name of python script for LLH analysis",\
-            default='do_llh_outFoV4realtime2.py')
+            default='/storage/home/gzr5209/work/BatML_code_work/NITRATES/do_llh_outFoV4realtime2.py')
     # parser.add_argument('--SCANpyscript', type=str,\
     #         help="Name of python script for FoV scan",\
     #         default='do_llh_scan_uncoded.py')
@@ -1381,7 +1387,7 @@ def main(args):
                     logging.error(E)
                     try:
                         res_in_tab = get_merged_csv_df(res_in_fnames)
-                         res_peak_tab = get_merged_csv_df(res_peak_fnames)
+                        res_peak_tab = get_merged_csv_df(res_peak_fnames)
                         logging.info("Got merged in results without RA Decs")
                     except Exception as E:
                         logging.error(E)

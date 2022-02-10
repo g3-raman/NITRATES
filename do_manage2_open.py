@@ -995,6 +995,9 @@ def main(args):
     to = ['graman.sudha@gmail.com']
     subject = 'BATML ' + args.GWname
     body = "Got data and starting analysis"
+    #body += "Imaging results"
+
+
     try:
         send_email(subject, body, to)
     except Exception as E:
