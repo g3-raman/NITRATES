@@ -33,10 +33,10 @@ def cli():
             default="/storage/home/gzr5209/work/BatML_code_work/NITRATES/data_scraping/BATQL.db")
     parser.add_argument('--att_dname', type=str,\
             help="Directory name that contains merged attfiles over chunks of time",
-            default="/storage/home/gzr5209/work/realtime_workdir/merged_atts/")
+            default="/storage/home/gzr5209/work/realtime_workdir_NITRATES/merged_atts/")
     parser.add_argument('--enb_dname', type=str,\
             help="Directory name that contains merged enable/disable files over chunks of time",
-            default="/storage/home/gzr5209/work/realtime_workdir/merged_enbs/")
+            default="/storage/home/gzr5209/work/realtime_workdir_NITRATES/merged_enbs/")
     parser.add_argument('--evfname', type=str,\
             help="Event data file",
             default=None)

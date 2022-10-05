@@ -8,8 +8,11 @@ echo "#-#-#Job started on `hostname` at `date` "
 echo This job runs on the following processors:
 echo `cat $PBS_NODEFILE`
 
-module load python/2.7.14-anaconda5.0.1
+#Aug 2022 after roar outage
+#module load python/2.7.14-anaconda5.0.1
+#module load anaconda3
 
+module load anaconda3/2020.07
 source activate py27new
 
 export PYTHONPATH=$batml_path:$PYTHONPATH

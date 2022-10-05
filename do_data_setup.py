@@ -433,7 +433,7 @@ def get_dmask(args, evdata, use_glob=False):
 
 
 
-    glob_dmask_fname = "/storage/home/gzr5209/work/bat-data/swbbadpix20041120v008.fits.gz"
+    glob_dmask_fname = "/storage/home/gzr5209/bat-data/swbbadpix20041120v008.fits.gz"
     global_dmask = fits.open(glob_dmask_fname)[-2].data
 
     if args.dmask is None and args.Obsid_Dir is None:
@@ -588,19 +588,20 @@ def cli():
     parser.add_argument('--work_dir', type=str,\
             help="Directory to work in",\
             #default='/storage/home/gzr5209/work/bat-data/')
-	    default='/storage/home/gzr5209/work/realtime_workdir/results/GRB211219A_open_NITRATES/')
+	    default=None)
+	#default='/storage/home/gzr5209/work/realtime_workdir/results/GRB211219A_open_NITRATES/')
     parser.add_argument('--data_dbfname', type=str,\
             help="DB file name with information on the BAT data already downloaded from the QL site",
             default="/storage/home/gzr5209/work/BatML_code_work/NITRATES/data_scraping/BATQL.db")
     parser.add_argument('--att_dname', type=str,\
             help="Directory name that contains merged attfiles over chunks of time",
-            default="/storage/home/gzr5209/work/realtime_workdir/merged_atts/")
+            default="/storage/home/gzr5209/work/realtime_workdir_NITRATES/merged_atts/")
     parser.add_argument('--acs_dname', type=str,\
             help="Directory name that contains merged acsfiles over chunks of time",
-            default="/storage/home/gzr5209/work/realtime_workdir/merged_acs/")
+            default="/storage/home/gzr5209/work/realtime_workdir_NITRATES/merged_acs/")
     parser.add_argument('--enb_dname', type=str,\
             help="Directory name that contains merged enable/disable files over chunks of time",
-            default="/storage/home/gzr5209/work/realtime_workdir/merged_atts/merged_enbs/")
+            default="/storage/home/gzr5209/work/realtime_workdir_NITRATES/merged_enbs/")
     parser.add_argument('--evfname', type=str,\
             help="Event data file",
             default=None)

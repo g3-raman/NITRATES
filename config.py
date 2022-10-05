@@ -27,11 +27,11 @@ ELEMENT_CROSS_SECTION_DNAME='/storage/home/gzr5209/work/BatML_code_work/NITRATES
 
 # DPI with st per det exposed to sky
 #solid_angle_dpi_fname = os.path.join(NITRATES_RESP_DIR,'solid_angle_dpi.npy')
-solid_angle_dpi_fname='/storage/home/gzr5209/work/bat-data/solid_angle_dpi.npy'
+solid_angle_dpi_fname='/storage/home/gzr5209/bat-data/solid_angle_dpi.npy'
 
 # Table of bright known sources from the Trans Monitor
 #bright_source_table_fname = os.path.join(NITRATES_RESP_DIR,'bright_src_cat.fits')
-bright_source_table_fname='/storage/home/gzr5209/work/bat-data/bright_src_cat.fits'
+bright_source_table_fname='/storage/home/gzr5209/bat-data/bright_src_cat.fits'
 
 EBINS0 = [15., 24., 35., 48., 64., 84., 120., 171.5, 245.]
 EBINS1 = [24., 35., 48., 64., 84., 120., 171.5, 245., 350.]

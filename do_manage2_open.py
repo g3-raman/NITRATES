@@ -15,7 +15,10 @@ try:
 except:
     pass
 
-from helper_funcs import send_email, send_error_email, send_email_attach, send_email_wHTML
+#from helper_funcs import send_email, send_error_email, send_email_attach, send_email_wHTML
+#from helper_funcs_vc_gw import send_email, send_error_email, send_email_attach, send_email_wHTML
+from helper_funcs_open_grb_realtime import send_email, send_error_email, send_email_attach, send_email_wHTML
+
 
 from sqlite_funcs import get_conn
 from dbread_funcs import get_files_tab, get_info_tab, guess_dbfname
@@ -31,7 +34,7 @@ def cli():
             default=None)
     parser.add_argument('--fp_dir', type=str,\
             help="Directory where the detector footprints are",
-            default='/storage/home/gzr5209/work/bat-data/rtfp_dir_npy/')
+            default='/gpfs/group/jak51/default/gzr5209/bat-data/rtfp_dir_npy/')
     parser.add_argument('--Nrate_jobs', type=int,\
             help="Total number of jobs",
             default=16)
@@ -814,8 +817,8 @@ def sub_jobs(njobs, name, pyscript, pbs_fname, queue='open',\
         ssh_cmd = 'ssh aci-b.aci.ics.psu.edu "'
         server = 'aci-b.aci.ics.psu.edu'
         server = 'submit.aci.ics.psu.edu'
-        server = 'submit-001.aci.ics.psu.edu'
-        server = 'submit-010.aci.ics.psu.edu'
+       # server = 'submit-001.aci.ics.psu.edu'
+       # server = 'submit-010.aci.ics.psu.edu'
         # client = paramiko.SSHClient()
         # client.load_system_host_keys()
         # client.connect(server)
@@ -824,15 +827,15 @@ def sub_jobs(njobs, name, pyscript, pbs_fname, queue='open',\
         #             %(args.pbs_fname, args.queue, args.name)
         if qos is not None:
             if rhel7:
-                base_sub_cmd = 'qsub %s -A %s -N %s -l nodes=1:ppn=%d -l qos=%s -l feature=rhel7 -v '\
-                            %(pbs_fname, queue, name, ppn, qos)
+                base_sub_cmd = 'qsub %s -A %s -q %s -N %s -l nodes=1:ppn=%d -l qos=%s -l feature=rhel7 -v '\
+                            %(pbs_fname, queue, q, name, ppn, qos)
             else:
                 base_sub_cmd = 'qsub %s -A %s -q %s -N %s -l nodes=1:ppn=%d -l qos=%s -v '\
                             %(pbs_fname, queue, q, name, ppn, qos)
         else:
             if rhel7:
-                base_sub_cmd = 'qsub %s -A %s -N %s -l nodes=1:ppn=%d -l feature=rhel7 -v '\
-                            %(pbs_fname, queue, name, ppn)
+                base_sub_cmd = 'qsub %s -A %s -q %s -N %s -l nodes=1:ppn=%d -l feature=rhel7 -v '\
+                            %(pbs_fname, queue, q, name, ppn)
             else:
                 base_sub_cmd = 'qsub %s -A %s -q %s -N %s -l nodes=1:ppn=%d -v '\
                             %(pbs_fname, queue, q, name, ppn)
@@ -840,18 +843,18 @@ def sub_jobs(njobs, name, pyscript, pbs_fname, queue='open',\
     else:
         if qos is not None:
             if rhel7:
-                base_sub_cmd = 'qsub %s -A %s -N %s -l nodes=1:ppn=%d -l qos=%s -l feature=rhel7 -v '\
-                            %(pbs_fname, queue, name, ppn, qos)
+                base_sub_cmd = 'qsub %s -A %s -q %s -N %s -l nodes=1:ppn=%d -l qos=%s -l feature=rhel7 -v '\
+                            %(pbs_fname, queue, q, name, ppn, qos)
             else:
-                base_sub_cmd = 'qsub %s -A %s -q %s-N %s -l nodes=1:ppn=%d -l qos=%s -v '\
+                base_sub_cmd = 'qsub %s -A %s -q %s -N %s -l nodes=1:ppn=%d -l qos=%s -v '\
                             %(pbs_fname, queue, q, name, ppn, qos)
         else:
             if rhel7:
-                base_sub_cmd = 'qsub %s -A %s -N %s -l nodes=1:ppn=%d -l feature=rhel7 -v '\
-                            %(pbs_fname, queue, name, ppn)
+                base_sub_cmd = 'qsub %s -A %s -q %s -N %s -l nodes=1:ppn=%d -l feature=rhel7 -v '\
+                            %(pbs_fname, queue, q, name, ppn)
             else:
                 base_sub_cmd = 'qsub %s -A %s -q %s -N %s -l nodes=1:ppn=%d -v '\
-                            %(pbs_fname, queue,q,  name, ppn)
+                            %(pbs_fname, queue, q, name, ppn)
 
     if workdir is None:
         workdir = os.getcwd()
@@ -990,11 +993,11 @@ def main(args):
 
     logging.info("Wrote pid: %d" %(os.getpid()))
 
-    #to = ['delauj2@gmail.com', 'aaron.tohu@gmail.com',
-     #       'g3raman@psu.edu', 'jak51@psu.edu']
-    to = ['graman.sudha@gmail.com']
-    subject = 'BATML ' + args.GWname
-    body = "Got data and starting analysis"
+    to = ['delauj2@gmail.com', 'aaron.tohu@gmail.com',
+            'gzr5209@psu.edu']
+   # to = ['graman.sudha@gmail.com']
+    subject = 'g3 BATML ' + args.GWname
+    body = " Got data and starting analysis"
     #body += "Imaging results"
 
 
@@ -1223,7 +1226,7 @@ def main(args):
             break
 
     try:
-        body = "Done with rates analysis\n"
+        body = " Done with rates analysis\n"
         body += "Max TS is %.3f" %(np.max(rate_res['TS']))
         logging.info(body)
         send_email(subject, body, to)
@@ -1384,37 +1387,37 @@ def main(args):
                     if has_sky_map:
                         res_in_tab = get_merged_csv_df_wpos(res_in_fnames, attfile, perc_map)
                         res_peak_tab = get_merged_csv_df_wpos(res_peak_fnames, attfile, perc_map)
-			logging.info("Stage 1")
+			#logging.info("Stage 1")
                     else:
                         res_in_tab = get_merged_csv_df_wpos(res_in_fnames, attfile)
                         res_peak_tab = get_merged_csv_df_wpos(res_peak_fnames, attfile)
-			logging.info("Stage 2")
+			#logging.info("Stage 2")
                     logging.info("Got merged results with RA Decs")
                 except Exception as E:
                     logging.error(E)
                     try:
                         res_in_tab = get_merged_csv_df(res_in_fnames)
                         res_peak_tab = get_merged_csv_df(res_peak_fnames)
-			logging.info("Stage 3")
+			#logging.info("Stage 3")
                         logging.info("Got merged in results without RA Decs")
                     except Exception as E:
                         logging.error(E)
                     try:
                         res_peak_tab = get_merged_csv_df(res_peak_fnames)
-			logging.info("Stage 4")
+			#logging.info("Stage 4")
                         logging.info("Got merged peak results without RA Decs")
                     except Exception as E:
                         logging.error(E)
                 try:
                     res_in_tab['dt'] = res_in_tab['time'] - trigtime
                     res_peak_tab['dt'] = res_peak_tab['time'] - trigtime
-		    logging.info("Stage 5")
+		    #logging.info("Stage 5")
                 except Exception:
                     pass
                 try:
                     logging.info("Max in TS: %.3f" %(np.max(res_in_tab['TS'])))
                     logging.info("Max peak TS: %.3f" %(np.max(res_peak_tab['TS'])))
-		    logging.info("Stage 6")
+		   # logging.info("Stage 6")
                 except Exception:
                     pass
                 # try:
@@ -1436,7 +1439,7 @@ def main(args):
                     logging.info(body)
                     # send_email(subject, body, to)
                     send_email_wHTML(subject, body, to)
-		    logging.info("Stage 7")
+		    #logging.info("Stage 7")
                 except Exception as E:
                     logging.error(E)
                     logging.error("Trouble sending email")

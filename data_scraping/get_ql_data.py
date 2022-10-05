@@ -125,7 +125,8 @@ def cli():
     parser = argparse.ArgumentParser()
     parser.add_argument('--save_dir', type=str,\
             help="Directory to save data to",\
-            default='/storage/home/gzr5209/work/realtime_workdir')
+            #default='/gpfs/group/jak51/default/gzr5209/realtime_workdir/') # this is not mounted on amon so cant use this
+	    default='/storage/home/gzr5209/work/realtime_workdir_NITRATES/')
     parser.add_argument('--dbfname', type=str,\
             help="Name of the sqlite database",\
             default='/storage/home/gzr5209/work/BatML_code_work/NITRATES/data_scraping/BATQL.db')

@@ -6,9 +6,14 @@ sub_path=$batml_path'submission_scripts/'
 
 #workdir='/storage/home/gzr5209/work/bat-data/'
 #workdir='/storage/home/gzr5209/work/realtime_workdir/results/GW00059177002_open_NITRATES'
-workdir='/gpfs/group/jak51/default/gzr5209/GW_subthr_results/'
-ratespbs='/storage/home/gzr5209/work/BatML_code_work/NITRATES/submission_scripts/pyscript_template_rhel7_g3.pbs'
+#workdir='/gpfs/group/jak51/default/gzr5209/GW_subthr_results/re-runs_error1/'
+#Edited this on April 15th
+workdir='/gpfs/group/jak51/default/gzr5209/GW_subthr_FULL_RUNS_results_128tbin_final/'
 
+#ratespbs='/storage/home/gzr5209/work/BatML_code_work/NITRATES/submission_scripts/pyscript_template_rhel7_g3.pbs'
+
+#Edited this on Apr 15th 
+ratespbs='/storage/home/gzr5209/work/BatML_code_work/NITRATES/submission_scripts/pyscript_template_rhel7_g3_10gb.pbs'
 drmdir='/storage/home/gzr5209/work/drms/'
 
 export PYTHONPATH=$batml_path:$PYTHONPATH
@@ -94,11 +99,11 @@ fi
 if [ "$#" -ne 5 ]; then
     mintbin=$6
 else
-    mintbin=0.256
+    mintbin=0.128
 fi
 
 
-mintbin=0.256
+mintbin=0.128
 
 echo $trigtime
 echo $workdir
@@ -127,7 +132,7 @@ if [ -f "filter_evdata.fits" ]; then
     # python $sub_path'submit_jobs.py' --Njobs $Nratejobs --workdir $workdir --name $gwname --pbs_fname $ratespbs > submit_jobs.log 2>&1 &
     # python $batml_path'do_manage.py' --Nrate_jobs $Nratejobs --GWname $gwname > manager.out 2>&1 &
     python $batml_path'do_full_rates.py' --min_tbin $mintbin > full_rates.out 2>&1 &
-    python $batml_path'do_manage2_open.py' --GWname $gwname --rhel7 --do_bkg --do_rates --do_llh --queue open > manager.out 2>&1 &
+    python $batml_path'do_manage2_open_gw.py' --GWname $gwname --rhel7  --do_llh --queue open > manager.out 2>&1 &
     #python $batml_path'do_manage2.py' --GWname $gwname --rhel7 --do_bkg --do_rates --do_llh > manager.out 2>&1 &
 fi
 

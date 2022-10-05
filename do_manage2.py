@@ -15,7 +15,9 @@ try:
 except:
     pass
 
-from helper_funcs import send_email, send_error_email, send_email_attach, send_email_wHTML
+#from helper_funcs import send_email, send_error_email, send_email_attach, send_email_wHTML
+#using the same helperfuncs as open grb even for vc because email settings are same.. July 4th 2022
+from helper_funcs_open_grb_realtime import send_email, send_error_email, send_email_attach, send_email_wHTML
 
 from sqlite_funcs import get_conn
 from dbread_funcs import get_files_tab, get_info_tab, guess_dbfname
@@ -31,7 +33,7 @@ def cli():
             default=None)
     parser.add_argument('--fp_dir', type=str,\
             help="Directory where the detector footprints are",
-            default='/storage/home/gzr5209/work/bat-data/rtfp_dir_npy/')
+            default='/gpfs/group/jak51/default/gzr5209/bat-data/rtfp_dir_npy/')
     parser.add_argument('--Nrate_jobs', type=int,\
             help="Total number of jobs",
             default=16)
@@ -814,8 +816,8 @@ def sub_jobs(njobs, name, pyscript, pbs_fname, queue='jak51_b_g_vc_default',\
         ssh_cmd = 'ssh aci-b.aci.ics.psu.edu "'
         server = 'aci-b.aci.ics.psu.edu'
         server = 'submit.aci.ics.psu.edu'
-        server = 'submit-001.aci.ics.psu.edu'
-        server = 'submit-010.aci.ics.psu.edu'
+        #server = 'submit-001.aci.ics.psu.edu'
+       # server = 'submit-010.aci.ics.psu.edu'
         # client = paramiko.SSHClient()
         # client.load_system_host_keys()
         # client.connect(server)
@@ -843,7 +845,7 @@ def sub_jobs(njobs, name, pyscript, pbs_fname, queue='jak51_b_g_vc_default',\
                 base_sub_cmd = 'qsub %s -A %s -q %s -N %s -l nodes=1:ppn=%d -l qos=%s -l feature=rhel7 -v '\
                             %(pbs_fname, queue, q, name, ppn, qos)
             else:
-                base_sub_cmd = 'qsub %s -A %s -q %s-N %s -l nodes=1:ppn=%d -l qos=%s -v '\
+                base_sub_cmd = 'qsub %s -A %s -q %s -N %s -l nodes=1:ppn=%d -l qos=%s -v '\
                             %(pbs_fname, queue, q, name, ppn, qos)
         else:
             if rhel7:
@@ -851,7 +853,7 @@ def sub_jobs(njobs, name, pyscript, pbs_fname, queue='jak51_b_g_vc_default',\
                             %(pbs_fname, queue, q, name, ppn)
             else:
                 base_sub_cmd = 'qsub %s -A %s -q %s -N %s -l nodes=1:ppn=%d -v '\
-                            %(pbs_fname, queue,q,  name, ppn)
+                            %(pbs_fname, queue, q, name, ppn)
 
     if workdir is None:
         workdir = os.getcwd()
@@ -990,8 +992,8 @@ def main(args):
 
     logging.info("Wrote pid: %d" %(os.getpid()))
 
-    to = ['gzr5209@psu.edu']
-    subject = 'BATML ' + args.GWname
+    to = ['gzr5209@psu.edu','delauj2@gmail.com', 'aaron.tohu@gmail.com','jak51@psu.edu']
+    subject = ' g3 BATML ' + args.GWname
     body = "Got data and starting analysis"
     try:
         send_email(subject, body, to)
@@ -1116,22 +1118,22 @@ def main(args):
             extra_args = "--archive --twind %.3f"%(args.twind)
             if args.rhel7:
                 sub_jobs(1, 'BKG_'+args.GWname, args.BKGpyscript,\
-                        args.pbs_rhel7_fname, queue=args.queue, ppn=1,\
-                        extra_args=extra_args, qos=None, rhel7=args.rhel7)
+                        args.pbs_rhel7_fname, queue=args.queue, ppn=4,\
+                        extra_args=extra_args, qos=None, rhel7=args.rhel7,q=args.q)
             else:
                 sub_jobs(1, 'BKG_'+args.GWname, args.BKGpyscript,\
-                        args.pbs_fname, queue=args.queue, ppn=1,\
-                        extra_args=extra_args, qos=None, rhel7=args.rhel7)
+                        args.pbs_fname, queue=args.queue, ppn=4,\
+                        extra_args=extra_args, qos=None, rhel7=args.rhel7,q=args.q)
         else:
             if args.rhel7:
                 sub_jobs(1, 'BKG_'+args.GWname, args.BKGpyscript,\
                         args.pbs_rhel7_fname, queue=args.queue,\
-                        ppn=1, qos=None, rhel7=args.rhel7)
+                        ppn=4, qos=None, rhel7=args.rhel7,q=args.q)
             else:
                 sub_jobs(1, 'BKG_'+args.GWname, args.BKGpyscript,\
                         args.pbs_fname,\
-                        queue='open',#args.queue,\
-                        ppn=1, qos=None, rhel7=args.rhel7)
+                        queue=args.queue,\
+                        ppn=4, qos=None, rhel7=args.rhel7,q=args.q)
         logging.info("Job submitted")
         # except Exception as E:
         #     logging.warn(E)
@@ -1170,11 +1172,11 @@ def main(args):
         if args.rhel7:
             sub_jobs(Nratejobs, 'RATES_'+args.GWname, args.RATEpyscript,\
                         args.pbs_rhel7_fname, queue=args.queue, qos=args.qos,\
-                        extra_args=extra_args, rhel7=args.rhel7)
+                        extra_args=extra_args, rhel7=args.rhel7,q=args.q)
         else:
             sub_jobs(Nratejobs, 'RATES_'+args.GWname, args.RATEpyscript,\
                         args.pbs_fname, queue=args.queue, qos=args.qos,\
-                        extra_args=extra_args, rhel7=args.rhel7)
+                        extra_args=extra_args, rhel7=args.rhel7,q=args.q)
         logging.info("Jobs submitted")
         # except Exception as E:
         #     logging.warn(E)
@@ -1323,17 +1325,17 @@ def main(args):
         if args.rhel7:
             sub_jobs(Njobs_in, 'LLHin_'+args.GWname, args.LLHINpyscript,\
                         args.pbs_rhel7_fname, queue=args.queue, qos=args.qos,\
-                        extra_args=extra_args, rhel7=args.rhel7)
+                        extra_args=extra_args, rhel7=args.rhel7,q=args.q)
             logging.info("Submitting %d out of FoV Jobs now"%(Njobs_out))
             sub_jobs(Njobs_out, 'LLHo_'+args.GWname, args.LLHOUTpyscript,\
-                        args.pbs_rhel7_fname, queue=args.queue, qos=args.qos, rhel7=args.rhel7)
+                        args.pbs_rhel7_fname, queue=args.queue, qos=args.qos, rhel7=args.rhel7,q=args.q)
         else:
             sub_jobs(Njobs_in, 'LLHin_'+args.GWname, args.LLHINpyscript,\
                         args.pbs_fname, queue=args.queue, qos=args.qos,\
-                        extra_args=extra_args, rhel7=args.rhel7)
+                        extra_args=extra_args, rhel7=args.rhel7,q=args.q)
             logging.info("Submitting %d out of FoV Jobs now"%(Njobs_out))
             sub_jobs(Njobs_out, 'LLHo_'+args.GWname, args.LLHOUTpyscript,\
-                        args.pbs_fname, queue=args.queue, qos=args.qos, rhel7=args.rhel7)
+                        args.pbs_fname, queue=args.queue, qos=args.qos, rhel7=args.rhel7,q=args.q)
         logging.info("Jobs submitted, now going to monitor progress")
 
 
@@ -1476,6 +1478,16 @@ def main(args):
             break
         time.sleep(30.0)
         dt = time.time() - t_0
+#Added on 4th Sept, 2022 from jjd repo
+
+    dlogl_peak, dlogl_out = get_dlogl_peak_out(res_peak_maxSqTime_tab, res_out_tab)
+
+    body = "DeltaLLH_peak = %.3f \nDeltaLLH_out = %.3f" %(dlogl_peak, dlogl_out)
+    try:
+        send_email(subject, body, to)
+    except Exception as E:
+        logging.error(E)
+        logging.error("Trouble sending email")
 
 
     # logging.info("Saving full result table to: ")

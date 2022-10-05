@@ -9,7 +9,9 @@ from astropy.time import Time
 import numpy as np
 import sys
 import pandas as pd
-sys.path.append("/storage/home/gzr5209/work/BatML_code_work/NITRATES/data_scraping/")
+
+#sys.path.append("/storage/work/jjd330/local/bat_data/BatML/data_scraping/")
+sys.path.append("/storage/home/gzr5209/work/BatML/data_scraping/")
 
 from db_ql_funcs import get_conn, get_qlevent_db_tab, write_new_obsid_line,\
                     update_obsid_line, get_db_tab, write_event_files2db
@@ -128,13 +130,15 @@ def cli():
     parser = argparse.ArgumentParser()
     parser.add_argument('--save_dir', type=str,\
             help="Directory to save data to",\
-            default='/storage/home/gzr5209/work/realtime_workdir/')
+            default='/storage/home/gzr5209/work/realtime_workdir_NITRATES/')
+	    #default='/gpfs/group/jak51/default/gzr5209/realtime_workdir/')
     parser.add_argument('--dbfname', type=str,\
             help="Name of the sqlite database",\
-            default='/storage/home/gzr5209/work/BatML_code_work/NITRATES/data_scraping/BATQL.db')
+            default=None)
     parser.add_argument('--htmldir', type=str,\
             help="bash script to run analysis",
-            default="/storage/home/gzr5209/work/realtime_workdir/htmls/")
+            default='/storage/home/gzr5209/work/realtime_workdir_NITRATES/htmls/')
+	   # default="/gpfs/group/jak51/default/gzr5209/realtime_workdir/htmls/")
     args = parser.parse_args()
     return args
 
@@ -274,8 +278,8 @@ def main(args):
     pd.set_option('display.max_colwidth', -1)
     ql_db_tab = get_db_tab(conn, table_name)
     html_file = os.path.join(args.htmldir, table_name+".html")
-    ql_db_tab.sort_values('METstart', ascending=False).to_html(\
-            html_file, render_links=True, float_format='{0:.4f}'.format)
+ #   ql_db_tab.sort_values('METstart', ascending=False).to_html(\
+ #           html_file, render_links=True, float_format='{0:.4f}'.format)
     conn.close()
 
 

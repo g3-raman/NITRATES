@@ -321,6 +321,9 @@ def main(args):
     # make S/N skymap
     sig_map = mk_sig_map(summed_sky_map, bkg_map, bkgvar_map)
 
+    hdu=fits.PrimaryHDU(summed_sky_map)
+    hdu.writeto('mosaic_skymap.fits')
+
     # print out S/N, summed partial coding, and RA, Dec for each
     # pixel with S/N > 6
     print("Summed Partial Coding, S/N, RA, Dec")

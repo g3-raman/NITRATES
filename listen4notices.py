@@ -11,14 +11,28 @@ import voeventparse as vp
 from datetime import datetime
 
 from helper_funcs import send_error_email, send_email
+#from helper_funcs_open_grb_realtime import send_email, send_error_email, send_email_attach, send_email_wHTML
+
 from hp_funcs import err_circle2prob_map
 # sys.path.append('/var/lib/mysql_drbd/amon/monitor_scripts/check_events/')
 # from functions import slack_message
 
 # run as nohup python $batml_path'listen4notices.py' > /storage/work/jjd330/local/bat_data/realtime_workdir/listen4gcns_out.log 2>&1 &
 
-workdir='/storage/work/j/jjd330/local/bat_data/realtime_workdir/'
-script_path='/storage/work/j/jjd330/local/bat_data/BatML/run_stuff_grb2.sh'
+#workdir='/storage/work/j/jjd330/local/bat_data/realtime_workdir/'
+#script_path='/storage/work/j/jjd330/local/bat_data/BatML/run_stuff_grb2.sh'
+
+#workdir='/storage/home/gzr5209/work/realtime_workdir_NITRATES/'
+workdir='/storage/work/g/gzr5209/realtime_workdir_NITRATES/'
+#script_path='/storage/home/gzr5209/work/BatML_code_work/NITRATES/run_stuff_grb2_vc_grb_realtime.sh'
+
+# Re-Changed July 30th 6 pm
+# Re-Rechanged to vcs Aug 1st
+# Re-changed Aug 19th 2022 9:20 pm
+# vcs back on Aug 23rd 3 pm
+# vcs back on Sept 6th 7:20 pm
+#script_path='/storage/home/gzr5209/work/BatML_code_work/NITRATES/run_stuff_grb2_open_grb_realtime.sh'
+script_path='/storage/home/gzr5209/work/BatML_code_work/NITRATES/run_stuff_grb2_vc_realtime.sh'
 
 INTEGRAL = [gcn.notice_types.INTEGRAL_SPIACS,
             gcn.notice_types.INTEGRAL_WAKEUP,

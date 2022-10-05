@@ -5,8 +5,12 @@ ht_path=$batml_path'HeasoftTools/'
 sub_path=$batml_path'submission_scripts/'
 
 #workdir='/storage/home/gzr5209/work/bat-data/'
-#workdir='/storage/home/gzr5209/work/realtime_workdir/result/'
-workdir='/gpfs/group/jak51/default/gzr5209/realtime_results/'
+#workdir='/storage/home/gzr5209/work/realtime_workdir/'
+#workdir='/gpfs/group/jak51/default/gzr5209/realtime_results/' # Commented out on 11th April
+
+workdir='/storage/home/gzr5209/work/realtime_workdir_NITRATES/' # added on 11th Apr
+#workdir='/storage/home/gzr5209/testing_py3_results/'
+#workdir='/storage/home/gzr5209/scratch/testing_py3_results'
 
 ratespbs='/storage/home/gzr5209/work/BatML_code_work/NITRATES/submission_scripts/pyscript_template_rhel7_g3.pbs'
 
@@ -99,7 +103,7 @@ else
 fi
 
 
-mintbin=0.256
+#mintbin=0.256
 
 echo $trigtime
 echo $workdir

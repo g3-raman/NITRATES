@@ -3,12 +3,14 @@
 #PBS -l nodes=1:ppn=1
 #PBS -l walltime=48:00:00
 #PBS -l mem=8gb
+#PBS -l pmem=6gb
 
 echo "#-#-#Job started on `hostname` at `date` "
 echo This job runs on the following processors:
 echo `cat $PBS_NODEFILE`
 
-module load anaconda3
+module load anaconda3/2020.07
+#module load anaconda3/2021.05
 # change this to whatever your env name is
 source activate py27new # edited on Oct 28th 
 

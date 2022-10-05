@@ -19,7 +19,7 @@ def send_error_email(subject, body):
     msg['Subject'] = subject
     msg['From'] = me
     msg['To'] = ", ".join(to)
-    pas = 'cheesec@ke1234'
+    pas = 'lqwwnhmxjzgwgalb'
     s = smtplib.SMTP('smtp.gmail.com:587')
     s.ehlo()
     s.starttls()
@@ -37,7 +37,7 @@ def send_email(subject, body, to):
     msg['Subject'] = subject
     msg['From'] = me
     msg['To'] = ", ".join(to)
-    pas = 'cheesec@ke1234'
+    pas = 'lqwwnhmxjzgwgalb'
     s = smtplib.SMTP('smtp.gmail.com:587')
     s.ehlo()
     s.starttls()
@@ -48,7 +48,7 @@ def send_email(subject, body, to):
     s.quit()
 
 def send_email_wHTML(subject, body, to):
-   # to = ['gzr5209@psu.edu','aaron.tohu@gmail.com','delauj2@gmail.com']
+#    to = ['gzr5209@psu.edu','aaron.tohu@gmail.com','delauj2@gmail.com']
     to = ['gzr5209@psu.edu']
     me = 'graman.sudha@gmail.com'
     msg = MIMEMultipart('alternative')
@@ -57,7 +57,7 @@ def send_email_wHTML(subject, body, to):
     msg['To'] = ", ".join(to)
     html_body = MIMEText(body, 'html')
     msg.attach(html_body)
-    pas = 'cheesec@ke1234'    
+    pas = 'lqwwnhmxjzgwgalb'    
     s = smtplib.SMTP('smtp.gmail.com:587')
     s.ehlo()
     s.starttls()
@@ -79,7 +79,7 @@ def send_email_attach(subject, body, to, fname):
     msg['To'] = ", ".join(to)
 
     msg.attach(MIMEText(body))
-    pas = 'cheesec@ke1234'
+    pas = 'lqwwnhmxjzgwgalb'
     s = smtplib.SMTP('smtp.gmail.com:587')
     s.ehlo()
     s.starttls()

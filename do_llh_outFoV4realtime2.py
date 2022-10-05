@@ -7,6 +7,7 @@ import argparse
 import logging, traceback
 import time
 import pandas as pd
+import gc
 
 from bkg_rate_estimation import rate_obj_from_sqltab
 from sqlite_funcs import get_conn, write_result, write_results,\
@@ -165,10 +166,12 @@ def min_at_Epeaks_gammas(sig_miner, sig_mod, Epeaks, gammas):
 
 
 
-def analysis_at_theta_phi(theta, phi, rt_obj, bkg_bf_params_list, bkg_mod,\
+def analysis_at_theta_phi(theta, phi, rt_dir, bkg_bf_params_list, bkg_mod,\
                         flux_mod, ev_data, ebins0, ebins1,\
                         tbins0, tbins1, timeIDs):
-
+    rt_obj = RayTraces(rt_dir) 
+    
+    #g3 added on Sept 1st 2022 and changed above from rt_obj to rt_dir
     bl_dmask = bkg_mod.bl_dmask
 
     # sig_mod = Source_Model_OutFoV(flux_mod, [ebins0,ebins1], bl_dmask, use_deriv=True)
@@ -263,6 +266,7 @@ def analysis_at_theta_phi(theta, phi, rt_obj, bkg_bf_params_list, bkg_mod,\
 
         res_dfs.append(pd.DataFrame(res_dict))
         logging.debug("done with %d of %d tbins"%(i+1,ntbins))
+    del sig_mod
     return pd.concat(res_dfs, ignore_index=True)
 
 
@@ -295,7 +299,7 @@ def do_analysis(seed_tab, ev_data, flux_mod, rt_dir,\
             ps_mod.has_deriv = False
         bkg_mod = CompoundModel(bkg_mod_list)
 
-
+    gc.collect()
     hp_ind_grps = seed_tab.groupby('hp_ind')
 
     for hp_ind, df in hp_ind_grps:
@@ -324,13 +328,15 @@ def do_analysis(seed_tab, ev_data, flux_mod, rt_dir,\
             bkg_params = {pname:bkg_row[pname] for pname in\
                         bkg_mod.param_names}
             bkg_params_list.append(bkg_params)
+            gc.collect()
 
 
 
-        res_df = analysis_at_theta_phi(theta, phi, rt_obj,\
+        res_df = analysis_at_theta_phi(theta, phi, rt_dir,\
                                 bkg_params_list, bkg_mod,\
                                 flux_mod, ev_data, ebins0, ebins1,\
                                 t0s, t1s, timeIDs)
+        gc.collect()
         res_df['hp_ind'] = hp_ind
 
         fname = os.path.join(work_dir,\
